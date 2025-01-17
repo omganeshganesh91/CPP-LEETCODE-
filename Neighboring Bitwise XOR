@@ -1,0 +1,220 @@
+class Solution {
+public:
+    bool doesValidArrayExist(vector<int>& derived) {
+        int xorSum = 0;
+        for (int num : derived) {
+            xorSum ^= num;
+        }
+        return xorSum == 0; // Issue here
+    }
+};
+//////////////////////////////////////////////////////////////////////
+Alright, let me explain it to you like you're 12 years old!
+
+The Problem:
+You are given an array called derived, and it’s created by doing a special operation called XOR on a hidden array called original. Your job is to figure out if there could be a valid original array that forms the given derived array.
+
+What is XOR (⊕)?
+Think of XOR like this:
+
+If two numbers are the same (0 ⊕ 0 or 1 ⊕ 1), the result is 0.
+If two numbers are different (0 ⊕ 1 or 1 ⊕ 0), the result is 1.
+Examples:
+
+0
+⊕
+0
+=
+0
+0⊕0=0
+1
+⊕
+1
+=
+0
+1⊕1=0
+0
+⊕
+1
+=
+1
+0⊕1=1
+1
+⊕
+0
+=
+1
+1⊕0=1
+So, XOR compares two numbers and outputs 1 if they’re different, and 0 if they’re the same.
+
+How is derived Created?
+For every index in original, we do this:
+
+If it’s not the last index, calculate 
+derived[i]
+=
+original[i]
+⊕
+original[i+1]
+derived[i]=original[i]⊕original[i+1].
+If it is the last index, calculate 
+derived[n-1]
+=
+original[n-1]
+⊕
+original[0]
+derived[n-1]=original[n-1]⊕original[0].
+This connects the first and the last elements of original, forming a loop.
+
+Your Task:
+You are given the derived array, and you need to figure out if there’s any valid original array (made of only 0s and 1s) that could have created it.
+
+Steps to Solve (Simple Explanation):
+Remember the loop:
+
+Since XOR connects the first and last elements, the start and end of original must match up correctly. Otherwise, it won’t work.
+Try two possibilities:
+
+Since original is made of only 0s and 1s, there are only two possibilities for the first element:
+original[0]
+=
+0
+original[0]=0, or
+original[0]
+=
+1
+original[0]=1.
+Simulate both cases:
+
+Start with 
+original[0]
+=
+0
+original[0]=0 and calculate all other elements of original using derived.
+Then, start with 
+original[0]
+=
+1
+original[0]=1 and calculate all other elements.
+Check if either case matches up properly with the last element (it must satisfy 
+derived[n-1]
+=
+original[n-1]
+⊕
+original[0]
+derived[n-1]=original[n-1]⊕original[0]).
+Return the result:
+
+If at least one of the two cases works, return true.
+If neither works, return false.
+Examples:
+Example 1:
+Input: derived = [1, 1, 0]
+
+Try 
+original[0]
+=
+0
+original[0]=0:
+original[1]
+=
+derived[0]
+⊕
+original[0]
+=
+1
+⊕
+0
+=
+1
+original[1]=derived[0]⊕original[0]=1⊕0=1
+original[2]
+=
+derived[1]
+⊕
+original[1]
+=
+1
+⊕
+1
+=
+0
+original[2]=derived[1]⊕original[1]=1⊕1=0
+Check last: 
+derived[2]
+=
+original[2]
+⊕
+original[0]
+=
+0
+⊕
+0
+=
+0
+derived[2]=original[2]⊕original[0]=0⊕0=0 (Matches!)
+Result: true (A valid original is [0, 1, 0]).
+
+Example 2:
+Input: derived = [1, 0]
+
+Try 
+original[0]
+=
+0
+original[0]=0:
+
+original[1]
+=
+1
+⊕
+0
+=
+1
+original[1]=1⊕0=1
+Check last: 
+derived[1]
+=
+original[1]
+⊕
+original[0]
+=
+1
+⊕
+0
+=
+1
+derived[1]=original[1]⊕original[0]=1⊕0=1 (Doesn’t match!)
+Try 
+original[0]
+=
+1
+original[0]=1:
+
+original[1]
+=
+1
+⊕
+1
+=
+0
+original[1]=1⊕1=0
+Check last: 
+derived[1]
+=
+original[1]
+⊕
+original[0]
+=
+0
+⊕
+1
+=
+1
+derived[1]=original[1]⊕original[0]=0⊕1=1 (Doesn’t match!)
+Result: false (No valid original exists).
+
+Why Does This Work?
+The problem reduces to checking two possibilities for the starting point of original, and the loop ensures that the first and last elements match up correctly. By trying both, we can guarantee we’ve checked all cases.
+
+This is a fun problem because it’s like solving a puzzle where XOR gives you clues to uncover the hidden array!
