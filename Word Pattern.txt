@@ -1,0 +1,44 @@
+#include <iostream>
+#include <sstream>
+#include <unordered_map>
+using namespace std;
+
+class Solution {
+public:
+    bool wordPattern(string pattern, string s) {
+        unordered_map<char, string> charToWord;
+        unordered_map<string, char> wordToChar;
+        istringstream stream(s);
+        string word;
+        int i = 0;
+
+        // Step through words in s
+        while (stream >> word) {
+            // If pattern is shorter than number of words, return false
+            if (i >= pattern.length()) return false;
+
+            char c = pattern[i];
+
+            // Check character to word mapping
+            if (charToWord.count(c)) {
+                if (charToWord[c] != word)
+                    return false;
+            } else {
+                charToWord[c] = word;
+            }
+
+            // Check word to character mapping
+            if (wordToChar.count(word)) {
+                if (wordToChar[word] != c)
+                    return false;
+            } else {
+                wordToChar[word] = c;
+            }
+
+            i++;
+        }
+
+        // Ensure both pattern and words are of same length
+        return i == pattern.length();
+    }
+};
